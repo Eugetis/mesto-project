@@ -8,3 +8,21 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+@media screen and (max-width: 918px) {
+  .author__name-text {
+    text-align: center;
+    padding-left: 54px;
+    white-space: normal;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .author__name-text {
+    max-width: 100%;
+    font-size: 27px;
+    line-height: 1.22;
+    margin: 0 10px 0 0;
+    padding-left: 28px;
+  }
+}

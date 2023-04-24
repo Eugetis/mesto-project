@@ -3,3 +3,16 @@
   align-items: center;
   gap: 30px;
 }
+
+@media screen and (max-width: 918px) {
+  .author__profile {
+    flex-direction: column;
+    gap: 26px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .author__profile {
+    width: 100%;
+  }
+}

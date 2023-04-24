@@ -1,9 +1,19 @@
 .articles__like {
-  width: 22px;
+  min-width: 22px;
+  height: 19px;
+  background-image: url(../../../images/icon-heart.svg);
+  background-position: center;
+  background-repeat: repeat;
+  background-size: cover;
   transition: opacity 0.3s linear;
+  cursor: pointer;
 }
 
 .articles__like:hover {
   opacity: .5;
 }
 
+.articles__like:active {
+  background-image: url(../../../images/icon-heart-filled.svg);
+  opacity: 1;
+}

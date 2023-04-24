@@ -1,0 +1,34 @@
+.popup__form-field {
+  display: block;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  background-color: transparent;
+  font-size: 14px;
+  line-height: 1.21;
+  font-family: inherit;
+  padding: 0;
+}
+
+.popup__form-field:focus {
+    outline: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+  }
+
+.popup__form-field::-webkit-input-placeholder {
+    color: #bcbcbc;
+}
+
+.popup__form-field::-moz-placeholder {
+    color: #bcbcbc;
+}
+
+.popup__form-field::-ms-input-placeholder {
+    color: #bcbcbc;
+}
+
+.popup__form-field::placeholder {
+    color: #bcbcbc;
+} 

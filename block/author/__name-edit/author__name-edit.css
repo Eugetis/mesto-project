@@ -1,3 +1,10 @@
 .author__name-edit {
   width: 24px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  .author__name-edit {
+    width: 18px;
+  }
 }

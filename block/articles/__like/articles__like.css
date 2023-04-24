@@ -1,0 +1,9 @@
+.articles__like {
+  width: 22px;
+  transition: opacity 0.3s linear;
+}
+
+.articles__like:hover {
+  opacity: .5;
+}
+

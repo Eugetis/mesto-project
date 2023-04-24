@@ -1,0 +1,4 @@
+.author__name {
+  display: flex;
+  align-items: baseline;
+}

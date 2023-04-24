@@ -1,0 +1,11 @@
+.articles {
+  margin: 0;
+  padding: 50px 0 0;
+  font-size: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .articles {
+    padding: 36px 19px 0;
+  }
+}

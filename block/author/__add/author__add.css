@@ -1,0 +1,9 @@
+.author__add {
+  width: 150px;
+  height: 50px;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

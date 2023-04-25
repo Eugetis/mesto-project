@@ -1,10 +1,18 @@
 .author__name-edit {
   width: 24px;
+  height: 24px;
+  background-image: url(../../../images/icon-edit.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: 0;
   cursor: pointer;
 }
 
 @media screen and (max-width: 767px) {
   .author__name-edit {
     width: 18px;
+    height: 18px;
   }
 }

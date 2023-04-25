@@ -9,68 +9,66 @@
 
 <body class="page">
   <header class="header">
-    <img class="header__logo" src="./images/logo-mesto.svg" alt="логотип Место">
+    <img class="header__logo" src="./images/logo-mesto.svg" alt="логотип Место.">
   </header>
 
   <main>
     <section class="author">
       <div class="author__profile">
-        <img class="author__avatar" src="./images/avatar-kusto.jpg" alt="аватарка автора">
+        <img class="author__avatar" src="./images/avatar-kusto.jpg" alt="аватарка с портретом Кусто.">
         <div class="author__info">
           <div class="author__name">
-            <h1 class="author__name-text">Жак-Ив Кусто</h1>
-            <img class="author__name-edit white-hover" src="./images/icon-edit.svg" alt="иконка редактирования имени автора">
+            <h1 class="author__name-text">Жак-Ив Кусто Жак-Ив Кусто Жак-Ив Кусто Жак-Ив Кусто</h1>
+            <button class="author__name-edit white-hover" type="button"></button>
           </div>
           <p class="author__position">Исследователь океана</p>
         </div>
       </div>
-      <div class="author__add white-hover">
-        <img src="./images/icon-plus.svg" alt="иконка плюс">
-      </div>
+      <button class="author__add white-hover" type="button"></button>
     </section>
 
     <section class="articles" aria-label="список мест">
       <ul class="articles__grid">
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-karachaevsk.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-karachaevsk.jpg" alt="монастырь в Карачаевске.">
           <div class="articles__content">
             <h2 class="articles__title">Карачаевск</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-elbrus.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-elbrus.jpg" alt="гора Эльбрус на рассвете.">
           <div class="articles__content">
             <h2 class="articles__title">Гора Эльбрус</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-dombai.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-dombai.jpg" alt="Домбай летом.">
           <div class="articles__content">
             <h2 class="articles__title">Домбай</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-elbrus.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-elbrus.jpg" alt="гора Эльбрус на рассвете.">
           <div class="articles__content">
             <h2 class="articles__title">Гора Эльбрус</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-dombai.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-dombai.jpg" alt="Домбай летом.">
           <div class="articles__content">
             <h2 class="articles__title">Домбай</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
         <li class="articles__item">
-          <img class="articles__photo" src="./images/gridpic-karachaevsk.jpg" alt="фото Карачаевска">
+          <img class="articles__photo" src="./images/gridpic-karachaevsk.jpg" alt="монастырь в Карачаевске.">
           <div class="articles__content">
             <h2 class="articles__title">Карачаево-Черкессия</h2>
-            <div class="articles__like"></div>
+            <button class="articles__like" type="button"></button>
           </div>
         </li>
       </ul>
@@ -82,9 +80,9 @@
     <p class="footer__copyright">&COPY; 2023 Mesto Russia</p>
   </footer>
 
-  <section class="popup popup_opened">
+  <section class="popup">
     <div class="popup__container">
-      <form class="popup__form">
+      <form class="popup__form" name="name-edit-form">
         <h2 class="popup__form-title">Редактировать профиль</h2>
         <fieldset class="popup__form-fields">
           <input type="text" class="popup__form-field" name="author-name" placeholder="Имя автора" required>
@@ -94,7 +92,7 @@
           <button type="submit" class="popup__form-button">Сохранить</button>
         </fieldset>
       </form>
-      <img class="popup__close white-hover" src="./images/icon-close.svg" alt="иконка закрытия окна">
+      <button class="popup__close white-hover" type="button"></button>
     </div>
   </section>
 

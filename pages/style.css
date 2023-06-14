@@ -22,6 +22,7 @@
 @import url(../block/articles/__title/articles__title.css);
 @import url(../block/articles/__like/articles__like.css);
 @import url(../block/articles/__like/articles__like_active.css);
+@import url(../block/articles/__delete/articles__delete.css);
 @import url(../block/footer/footer.css);
 @import url(../block/footer/__copyright/footer__copyright.css);
 @import url(../block/popup/popup.css);

@@ -135,4 +135,30 @@ function cardSend (evt) {
 formCard.addEventListener('submit', cardSend);
 
 
+// Лайк карточки
+
+const like = articlesGrid.querySelectorAll('.articles__item .articles__like');
+
+like.forEach(function(item) {
+    item.addEventListener('click', function() {
+        item.classList.toggle('articles__like_active');
+    });
+});
+
+
+// Удаление карточки
+
+const cardDeleteBtn = articlesGrid.querySelectorAll('.articles__item .articles__delete');
+
+cardDeleteBtn.forEach(function(item) {
+    item.addEventListener('click', function() {
+        const cardToDelete = item.closest('.articles__item');
+        cardToDelete.remove();
+    });
+});
+
+
+
+
+
 

@@ -14,8 +14,3 @@
 .articles__like:hover {
   opacity: .5;
 }
-
-.articles__like:active {
-  background-image: url(../../../images/icon-heart-filled.svg);
-  opacity: 1;
-}

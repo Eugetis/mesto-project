@@ -158,7 +158,25 @@ cardDeleteBtn.forEach(function(item) {
 });
 
 
+// Открытие и закрытие попапа с картинкой
 
+const popupPic = document.querySelector('.popup_type_pic');
+const popupPicClose = popupPic.querySelector('.popup__close');
+const popupPicPicture = popupPic.querySelector('.popup__picture');
+const popupPicCaption = popupPic.querySelector('.popup__caption');
+const photo = articlesGrid.querySelectorAll('.articles__item .articles__photo');
 
+photo.forEach(function(item) {
+    item.addEventListener('click', function () {
+        openPopup(popupPic);
+        popupPicPicture.src = item.closest('.articles__item').querySelector('.articles__photo').src;
+        popupPicCaption.textContent = item.closest('.articles__item').querySelector('.articles__title').textContent;
+    });
+});
+
+popupPicClose.addEventListener('click', function (evt) {
+    const popupPicToClose = evt.target.closest('.popup_type_pic');
+    popupPicToClose.classList.remove('popup-opened');
+});
 
 

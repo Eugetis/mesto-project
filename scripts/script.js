@@ -68,19 +68,19 @@ popupCardCloseBtn.addEventListener('click', closePopup);
 
 // Отправка формы редактирования профиля
 
-function authorEdit (evt) {
+function editAuthor (evt) {
   evt.preventDefault(); 
   authorNamePublished.textContent = nameInput.value;
   authorJobPublished.textContent = jobInput.value;
   closePopup(evt);
 }
 
-formAuthor.addEventListener('submit', authorEdit);
+formAuthor.addEventListener('submit', editAuthor);
 
 
 // Функция добавления карточки
 
-function cardAdd (card) {
+function addCard (card) {
     const articleElement = articleTemplate.querySelector('.articles__item').cloneNode(true);
     articleElement.querySelector('.articles__title').textContent = card.name;
     articleElement.querySelector('.articles__photo').src = card.link;
@@ -118,21 +118,21 @@ const initialCards = [
     }
     ];
 
-initialCards.forEach(cardAdd);
+initialCards.forEach(addCard);
 
 
 // Отправка формы добавления карточки
 
-function cardSend (evt) {
+function sendCard (evt) {
     evt.preventDefault(); 
     const card = formCard.querySelector('fieldset.popup__form-fields');
     card.name = cardNameInput.value;
     card.link = cardLinkInput.value;
-    cardAdd (card);
+    addCard(card);
     closePopup(evt);
   }
 
-formCard.addEventListener('submit', cardSend);
+formCard.addEventListener('submit', sendCard);
 
 
 // Лайк карточки

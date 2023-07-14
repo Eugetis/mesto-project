@@ -4,18 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Место</title>
-  <link rel="stylesheet" href="./pages/style.css">
 </head>
 
 <body class="page">
   <header class="header">
-    <img class="header__logo" src="./images/logo-mesto.svg" alt="логотип Место.">
+    <img class="header__logo" src="<%=require('./images/logo-mesto.svg')%>" alt="логотип Место.">
   </header>
 
   <main>
     <section class="author">
       <div class="author__profile">
-        <img class="author__avatar" src="./images/avatar.jpg" alt="аватарка с портретом Кусто.">
+        <img class="author__avatar" src="<%=require('./images/avatar.jpg')%>" alt="аватарка с портретом Кусто.">
         <div class="author__info">
           <div class="author__name">
             <h1 class="author__name-text">Жак-Ив Кусто</h1>
@@ -141,6 +140,5 @@
     </div>
   </section>
 
-  <script type="module" src="./components/script.js"></script>
 </body>
 </html>

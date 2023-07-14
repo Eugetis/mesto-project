@@ -1,3 +1,4 @@
+import '../pages/style.css';
 import { editAuthor, openPopupAuthor, openPopupCard } from './modal.js';
 import { enableValidation } from './validate.js';
 import { prependCard, initialCards, addNewCard } from './card.js';

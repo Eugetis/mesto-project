@@ -1,20 +1,49 @@
-import { openPopup, closePopup, hideClosestPopup } from './utils.js';
+import { popupAuthor, popupCard, nameInput, jobInput, authorNamePublished, authorJobPublished, settings } from './index.js';
+import { resetError } from './validate.js';
 
-const popupAuthor = document.querySelector('.p-author');
-const popupCard = document.querySelector('.p-card');
-const profileForm = document.forms['profile-form'];
-const nameInput = profileForm.elements.authorName;
-const jobInput = profileForm.elements.authorPosition;
-const authorNamePublished = document.querySelector('.author__name-text');
-const authorJobPublished = document.querySelector('.author__position');
-const closeButtons = document.querySelectorAll('.popup__close');
+
+// полный функционал открытия попапа с навешиванием слушателей
+
+export function openPopup(popup) {
+  popup.classList.add('popup_opened');
+  popup.addEventListener('mousedown', closePopupByOverlayClick);
+  document.addEventListener('keydown', closePopupByEscape);
+}
+
+
+// полный функционал закрытия попапа с удалением слушателей
+
+export function closePopup(popup) {
+  popup.removeEventListener('mousedown', closePopupByOverlayClick);
+  document.removeEventListener('keydown', closePopupByEscape);
+  popup.classList.remove('popup_opened');
+}
+
+
+// закрытие попапа по клику на оверлей
+
+function closePopupByOverlayClick(evt) {
+if (evt.currentTarget === evt.target) {
+  closePopup(evt.currentTarget);
+};
+}
+
+
+// закрытие попапа по нажатию на Esc
+
+function closePopupByEscape(evt) {
+if (evt.key === 'Escape') {
+  const openedPopup = document.querySelector('.popup_opened');
+  closePopup(openedPopup);
+};
+}
 
 
 // Универсальный обработчик закрытия попапа по крестику
 
-closeButtons.forEach((button) => {
-    const popupToClose = button.closest('.popup');
-    button.addEventListener('click', () => closePopup(popupToClose));
+document.querySelectorAll('.popup__close').forEach((btn) => {
+    const popupToClose = btn.closest('.popup');
+    btn.addEventListener('click', () => closePopup(popupToClose));
 });
 
 
@@ -28,6 +57,7 @@ function fillProfileInputs() {
 export function openPopupAuthor() {
   openPopup(popupAuthor);
   fillProfileInputs();
+  resetError(popupAuthor.querySelector('.popup__form'), settings);
 }
 
 
@@ -35,14 +65,5 @@ export function openPopupAuthor() {
 
 export function openPopupCard() {
     openPopup(popupCard);
-  }
-
-
-// Отправка формы редактирования профиля автора
-
-export function editAuthor (evt) {
-    evt.preventDefault(); 
-    authorNamePublished.textContent = nameInput.value;
-    authorJobPublished.textContent = jobInput.value;
-    hideClosestPopup(evt);
-  }
+    resetError(popupCard.querySelector('.popup__form'), settings);
+}

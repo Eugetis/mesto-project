@@ -87,3 +87,11 @@ export function enableValidation (settings) {
     });
 }
 
+
+// Функция сброса ошибок при открытии модальных окон
+
+export function resetError(formElement, settings) { 
+  const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
+  inputList.forEach(inputElement => hideInputError(formElement, inputElement, settings));
+  toggleButtonState(inputList, formElement.querySelector(settings.submitButtonSelector), settings); 
+} 

@@ -1,20 +1,10 @@
-import { openPopup, hideClosestPopup } from './utils.js';
-
-const popupPic = document.querySelector('.popup_type_pic');
-const popupPicPicture = popupPic.querySelector('.popup__picture');
-const popupPicCaption = popupPic.querySelector('.popup__caption');
-const cardForm = document.forms['card-form'];
-const cardToAdd = cardForm.querySelector('fieldset.popup__form-fields');
-const cardNameInput = cardForm.elements.cardName;
-const cardLinkInput = cardForm.elements.imgLink;
-const articlesGrid = document.querySelector('.articles__grid');
-
+import { openPopup } from './modal.js';
+import { popupPic, popupPicPicture, popupPicCaption, articleTemplate } from './index.js';
 
 
 // Функция создания карточки
 
-function createCard (card) {
-    const articleTemplate = document.querySelector('#article').content;
+export function createCard (card) {
     const articleElement = articleTemplate.querySelector('.articles__item').cloneNode(true);
     const articleTitle = articleElement.querySelector('.articles__title');
     const articlePhoto = articleElement.querySelector('.articles__photo');
@@ -37,53 +27,4 @@ function createCard (card) {
 
     return articleElement;
 };
-
-
-// Функция добавления карточки в начало списка
-
-export function prependCard (card) {
-    articlesGrid.prepend(createCard(card));
-}
-
-
-// Автодобавление 6 карточек при загрузке страницы
-
-export const initialCards = [
-    {
-      name: 'Архыз',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-    },
-    {
-      name: 'Челябинская область',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-    },
-    {
-      name: 'Иваново',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-      name: 'Камчатка',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-    },
-    {
-      name: 'Холмогорский район',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-    },
-    {
-      name: 'Байкал',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-    }
-    ];
-
-
-// Отправка формы добавления карточки
-
-export function addNewCard (evt) {
-    evt.preventDefault(); 
-    cardToAdd.name = cardNameInput.value;
-    cardToAdd.link = cardLinkInput.value;
-    prependCard(cardToAdd);
-    evt.target.reset();
-    hideClosestPopup(evt);
-}
 

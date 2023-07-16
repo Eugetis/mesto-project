@@ -1,4 +1,4 @@
-import { popupAuthor, popupCard, nameInput, jobInput, authorNamePublished, authorJobPublished, settings } from './index.js';
+import { popupAuthor, popupCard, popupAvatar, nameInput, jobInput, authorNamePublished, authorJobPublished, settings } from './index.js';
 import { resetError } from './validate.js';
 
 
@@ -66,4 +66,12 @@ export function openPopupAuthor() {
 export function openPopupCard() {
     openPopup(popupCard);
     resetError(popupCard.querySelector('.popup__form'), settings);
+}
+
+
+// Открытие попапа обновления аватара
+
+export function openPopupAvatar() {
+  openPopup(popupAvatar);
+  resetError(popupAvatar.querySelector('.popup__form'), settings);
 }

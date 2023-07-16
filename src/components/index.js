@@ -1,11 +1,13 @@
 import '../pages/style.css';
 import { enableValidation } from './validate.js';
 import { createCard } from './card.js';
-import { initialCards } from './utils.js';
-import { openPopupAuthor, openPopupCard, closePopup } from './modal.js';
+import { openPopupAuthor, openPopupCard, openPopupAvatar, closePopup } from './modal.js';
+import { getUserData, getInitialCards, postCustomCard, editAuthorData, editAuthorAvatar } from './api.js';
+import { renderLoading } from './utils';
 
 const popupAuthorOpenBtn = document.querySelector('.author__name-edit');
 const profileForm = document.forms['profile-form'];
+const newUserData = profileForm.querySelector('fieldset.popup__form-fields');
 const profileSubmitButton = profileForm.querySelector('.popup__form-button');
 const popupCardOpenBtn = document.querySelector('.author__add');
 const cardForm = document.forms['card-form'];
@@ -14,6 +16,10 @@ const cardNameInput = cardForm.elements.cardName;
 const cardLinkInput = cardForm.elements.imgLink;
 const cardSubmitButton = cardForm.querySelector('.popup__form-button');
 const articlesGrid = document.querySelector('.articles__grid');
+const popupAvatarOpenBtn = document.querySelector('.author__avatar-edit');
+const avatarForm = document.forms['avatar-form'];
+const newUserAvatar = avatarForm.querySelector('fieldset.popup__form-fields');
+const avatarSubmitButton = avatarForm.querySelector('.popup__form-button');
 
 export const articleTemplate = document.querySelector('#article').content;
 export const popupPic = document.querySelector('.popup_type_pic');
@@ -21,10 +27,14 @@ export const popupPicPicture = popupPic.querySelector('.popup__picture');
 export const popupPicCaption = popupPic.querySelector('.popup__caption');
 export const popupAuthor = document.querySelector('.p-author');
 export const popupCard = document.querySelector('.p-card');
+export const popupAvatar = document.querySelector('.p-avatar');
 export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');
 export const authorJobPublished = document.querySelector('.author__position');
+export let userId = '';
+const authorAvatar = document.querySelector('.author__avatar');
+const avatarInput = avatarForm.elements.avatarLink;
 
 export const settings = {
   formSelector: '.popup__form',
@@ -36,6 +46,43 @@ export const settings = {
 };
 
 
+// Получение и обработка первичных данных с сервера
+
+function getInitialData() {
+  Promise.all([getUserData(), getInitialCards()])
+    .then((res) => {
+      const userData = res[0];
+      const initialCards = res[1];
+      userId = userData._id;
+      renderUser(userData);
+      renderInitialCards(initialCards, userId);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+getInitialData();
+
+
+// рендер стартовых данных юзера с сервера
+
+const renderUser = (user) => {
+  authorNamePublished.textContent = user.name;
+  authorJobPublished.textContent = user.about;
+  authorAvatar.src = user.avatar;
+}
+
+
+// рендер первичных карточек с сервера
+
+const renderInitialCards = function(cards, user) {
+  cards.forEach((cardData) => {
+    const card = createCard(cardData, user);
+    articlesGrid.prepend(card);
+  });
+}
+
+
 // Вызов установщика валидатора на все формы на странице 
 
 enableValidation(settings);
@@ -45,22 +92,26 @@ enableValidation(settings);
 
 popupAuthorOpenBtn.addEventListener('click', openPopupAuthor);
 popupCardOpenBtn.addEventListener('click', openPopupCard);
+popupAvatarOpenBtn.addEventListener('click', openPopupAvatar);
 
 
-// Функция добавления карточки в начало списка
+// Отправка формы добавления новой карточки с ее последующим рендером
 
-function prependCard (card) {
-  articlesGrid.prepend(createCard(card));
-}
-
-
-// Отправка формы добавления карточки
-
-function addNewCard (evt) {
+function addNewCard(evt) {
   evt.preventDefault(); 
+  renderLoading(true, cardSubmitButton);
   cardToAdd.name = cardNameInput.value;
   cardToAdd.link = cardLinkInput.value;
-  prependCard(cardToAdd);
+  postCustomCard(cardToAdd)
+    .then((newCard) => {
+      prependCard(newCard)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      renderLoading(false, cardSubmitButton);
+    });
   cardSubmitButton.disabled = true;
   cardSubmitButton.classList.add('popup__form-button_inactive');
   evt.target.reset();
@@ -68,18 +119,36 @@ function addNewCard (evt) {
 }
 
 
-// Добавление карточек при загрузке и установка слушателя отправки формы добавления новой карточки
+// Функция добавления карточки в начало списка
 
-initialCards.forEach(prependCard);
+function prependCard(card) {
+  articlesGrid.prepend(createCard(card));
+}
+
+
+// Установка слушателя отправки формы добавления новой карточки
+
 cardForm.addEventListener('submit', addNewCard);
 
 
 // Отправка формы редактирования профиля автора
 
-function editAuthor (evt) {
+function editAuthor(evt) {
   evt.preventDefault(); 
-  authorNamePublished.textContent = nameInput.value;
-  authorJobPublished.textContent = jobInput.value;
+  renderLoading(true, profileSubmitButton);
+  newUserData.name = nameInput.value;
+  newUserData.about = jobInput.value;
+  editAuthorData(newUserData)
+    .then((updatedData) => {
+      authorNamePublished.textContent = updatedData.name;
+      authorJobPublished.textContent = updatedData.about;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      renderLoading(false, profileSubmitButton);
+    });
   profileSubmitButton.disabled = true;
   profileSubmitButton.classList.add('popup__form-button_inactive');
   closePopup(evt.target.closest('.popup'));
@@ -89,3 +158,31 @@ function editAuthor (evt) {
 // Установка слушателя отправки формы редактирования профиля
 
 profileForm.addEventListener('submit', editAuthor);
+
+
+// Отправка формы обновления аватара
+
+function editAvatar(evt) {
+  evt.preventDefault(); 
+  renderLoading(true, avatarSubmitButton);
+  newUserAvatar.link = avatarInput.value;
+  editAuthorAvatar(newUserAvatar)
+    .then((updatedData) => {
+      authorAvatar.src = updatedData.avatar;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      renderLoading(false, avatarSubmitButton);
+    });
+  avatarSubmitButton.disabled = true;
+  avatarSubmitButton.classList.add('popup__form-button_inactive');
+  evt.target.reset();
+  closePopup(evt.target.closest('.popup'));
+}
+
+
+// Установка слушателя отправки формы редактирования профиля
+
+avatarForm.addEventListener('submit', editAvatar);

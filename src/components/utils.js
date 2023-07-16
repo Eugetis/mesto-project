@@ -1,28 +1,19 @@
-// Автодобавление 6 карточек при загрузке страницы
+// функция проверки, все ли ок с ответом сервера
 
-export const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+export function validateServerResponse(res){
+  if(res.ok){
+    return res.json();
   }
-  ];
+  return Promise.reject(res.status);
+};
+
+
+// лоадер на кнопки
+
+export function renderLoading(isLoading, button) {
+  if(isLoading) {
+    button.textContent = 'Сохранение...';
+  } else {
+    button.textContent = 'Сохранить';
+  }
+}

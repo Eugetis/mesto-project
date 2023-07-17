@@ -49,7 +49,7 @@ export function createCard(card, user) {
     // функционал удаления
     const iconDelete = articleElement.querySelector('.articles__delete');
     if (card.owner._id !== user) {
-      iconDelete.setAttribute("style", "display:none;");
+      iconDelete.remove();
     } else {
       iconDelete.addEventListener('click', function() {
         deleteCard(articleElement)

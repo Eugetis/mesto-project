@@ -104,7 +104,9 @@ function addNewCard(evt) {
   cardToAdd.link = cardLinkInput.value;
   postCustomCard(cardToAdd)
     .then((newCard) => {
-      prependCard(newCard)
+      prependCard(newCard, newCard.owner._id);
+      evt.target.reset();
+      closePopup(evt.target.closest('.popup'));
     })
     .catch((err) => {
       console.log(err);
@@ -112,17 +114,13 @@ function addNewCard(evt) {
     .finally(() => {
       renderLoading(false, cardSubmitButton);
     });
-  cardSubmitButton.disabled = true;
-  cardSubmitButton.classList.add('popup__form-button_inactive');
-  evt.target.reset();
-  closePopup(evt.target.closest('.popup'));
 }
 
 
 // Функция добавления карточки в начало списка
 
-function prependCard(card) {
-  articlesGrid.prepend(createCard(card));
+function prependCard(card, user) {
+  articlesGrid.prepend(createCard(card, user));
 }
 
 
@@ -142,6 +140,7 @@ function editAuthor(evt) {
     .then((updatedData) => {
       authorNamePublished.textContent = updatedData.name;
       authorJobPublished.textContent = updatedData.about;
+      closePopup(evt.target.closest('.popup'));
     })
     .catch((err) => {
       console.log(err);
@@ -149,9 +148,6 @@ function editAuthor(evt) {
     .finally(() => {
       renderLoading(false, profileSubmitButton);
     });
-  profileSubmitButton.disabled = true;
-  profileSubmitButton.classList.add('popup__form-button_inactive');
-  closePopup(evt.target.closest('.popup'));
 }
 
 
@@ -169,6 +165,8 @@ function editAvatar(evt) {
   editAuthorAvatar(newUserAvatar)
     .then((updatedData) => {
       authorAvatar.src = updatedData.avatar;
+      evt.target.reset();
+      closePopup(evt.target.closest('.popup'));
     })
     .catch((err) => {
       console.log(err);
@@ -176,10 +174,6 @@ function editAvatar(evt) {
     .finally(() => {
       renderLoading(false, avatarSubmitButton);
     });
-  avatarSubmitButton.disabled = true;
-  avatarSubmitButton.classList.add('popup__form-button_inactive');
-  evt.target.reset();
-  closePopup(evt.target.closest('.popup'));
 }
 
 

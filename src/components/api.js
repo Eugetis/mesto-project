@@ -1,5 +1,3 @@
-import { validateServerResponse } from './utils.js';
-
 const config = {
     baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26',
     headers: {
@@ -7,6 +5,16 @@ const config = {
       'Content-Type': 'application/json'
     }
 }
+
+
+// функция проверки, все ли ок с ответом сервера
+
+function validateServerResponse(res){
+    if(res.ok){
+      return res.json();
+    }
+    return Promise.reject(res.status);
+  };
 
 
 // запрос данных юзера с сервера

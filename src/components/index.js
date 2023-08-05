@@ -1,3 +1,16 @@
+import Api from './Api.js';
+
+const api = new Api({
+  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26',
+  headers: {
+    authorization: '257608b2-435d-4812-89a7-aa07205ef2dd',
+    'Content-Type': 'application/json'
+  }
+});
+
+
+
+
 import '../pages/style.css';
 import { enableValidation } from './validate.js';
 import { createCard } from './card.js';
@@ -180,3 +193,4 @@ function editAvatar(evt) {
 // Установка слушателя отправки формы редактирования профиля
 
 avatarForm.addEventListener('submit', editAvatar);
+

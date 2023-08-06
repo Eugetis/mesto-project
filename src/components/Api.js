@@ -77,8 +77,8 @@ export default class Api {
 
 
 // метод - запрос на удаление карточки
-  deleteCard(cardToDelete) {
-    const cardToDeleteId = cardToDelete.getAttribute("data-id");
+  deleteCard(cardToDeleteId) {
+    // const cardToDeleteId = cardToDelete.getAttribute("data-id");
     return fetch(`${this._baseUrl}/cards/${cardToDeleteId}`, {
       method: 'DELETE',
       headers: this._headers
@@ -88,8 +88,8 @@ export default class Api {
 
 
 // метод - запрос на поставить лайк карточки
-  likeCard(cardToLike) {
-    const cardToLikeId = cardToLike.getAttribute("data-id");
+  likeCard(cardToLikeId) {
+    //const cardToLikeId = cardToLike.getAttribute("data-id");
     return fetch(`${this._baseUrl}/cards/likes/${cardToLikeId}`, {
       method: 'PUT',
       headers: this._headers
@@ -99,8 +99,8 @@ export default class Api {
 
 
 // метод - запрос на удалить лайк карточки
-  unlikeCard(cardToUnlike) {
-    const cardToUnlikeId = cardToUnlike.getAttribute("data-id");
+  unlikeCard(cardToUnlikeId) {
+    // const cardToUnlikeId = cardToUnlike.getAttribute("data-id");
     return fetch(`${this._baseUrl}/cards/likes/${cardToUnlikeId}`, {
       method: 'DELETE',
       headers: this._headers

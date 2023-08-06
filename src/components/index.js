@@ -1,6 +1,10 @@
 import Api from './Api.js';
+import Card from './Card.js';
+import Section from './Section.js';
+import { cardListSelector 
+} from '../utils/constants.js';
 
-const api = new Api({
+export const api = new Api({
   baseUrl: 'https://nomoreparties.co/v1/plus-cohort-26',
   headers: {
     authorization: '257608b2-435d-4812-89a7-aa07205ef2dd',
@@ -13,9 +17,9 @@ const api = new Api({
 
 import '../pages/style.css';
 import { enableValidation } from './validate.js';
-import { createCard } from './card.js';
+// import { createCard } from './Card.js';
 import { openPopupAuthor, openPopupCard, openPopupAvatar, closePopup } from './modal.js';
-import { getUserData, getInitialCards, postCustomCard, editAuthorData, editAuthorAvatar } from './api.js';
+import { getUserData, getInitialCards, postCustomCard, editAuthorData, editAuthorAvatar } from './Api.js';
 import { renderLoading } from './utils';
 
 const popupAuthorOpenBtn = document.querySelector('.author__name-edit');
@@ -28,13 +32,13 @@ const cardToAdd = cardForm.querySelector('fieldset.popup__form-fields');
 const cardNameInput = cardForm.elements.cardName;
 const cardLinkInput = cardForm.elements.imgLink;
 const cardSubmitButton = cardForm.querySelector('.popup__form-button');
-const articlesGrid = document.querySelector('.articles__grid');
+// const articlesGrid = document.querySelector('.articles__grid');  // перенес в constants.js
 const popupAvatarOpenBtn = document.querySelector('.author__avatar-edit');
 const avatarForm = document.forms['avatar-form'];
 const newUserAvatar = avatarForm.querySelector('fieldset.popup__form-fields');
 const avatarSubmitButton = avatarForm.querySelector('.popup__form-button');
 
-export const articleTemplate = document.querySelector('#article').content;
+//export const articleTemplate = document.querySelector('#article').content;
 export const popupPic = document.querySelector('.popup_type_pic');
 export const popupPicPicture = popupPic.querySelector('.popup__picture');
 export const popupPicCaption = popupPic.querySelector('.popup__caption');
@@ -45,7 +49,7 @@ export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');
 export const authorJobPublished = document.querySelector('.author__position');
-export let userId = '';
+// export let userId = '';
 const authorAvatar = document.querySelector('.author__avatar');
 const avatarInput = avatarForm.elements.avatarLink;
 
@@ -62,11 +66,11 @@ export const settings = {
 // Получение и обработка первичных данных с сервера
 
 function getInitialData() {
-  Promise.all([getUserData(), getInitialCards()])
+  Promise.all([api.getUserData(), api.getInitialCards()])
     .then((res) => {
       const userData = res[0];
       const initialCards = res[1];
-      userId = userData._id;
+      const userId = userData._id;
       renderUser(userData);
       renderInitialCards(initialCards, userId);
     })
@@ -88,13 +92,26 @@ const renderUser = (user) => {
 
 // рендер первичных карточек с сервера
 
-const renderInitialCards = function(cards, user) {
-  cards.forEach((cardData) => {
-    const card = createCard(cardData, user);
-    articlesGrid.prepend(card);
-  });
-}
+// const renderInitialCards = function(cards, user) {
+//   cards.forEach((cardData) => {
+//     const card = new Card(cardData, '.article');
+//     const cardElement = card.generate(user);
+//     articlesGrid.append(cardElement);
+//   });
+// }
 
+const renderInitialCards = function(cards, userId) {
+  const cardList = new Section({
+    data: cards,
+    renderer: (cardData, userId) => {
+      const card = new Card(cardData, '.article', userId);
+      const cardElement = card.generate();
+      cardList.setItem(cardElement);
+    }
+  }, cardListSelector, userId);
+
+  cardList.renderItems();
+}
 
 // Вызов установщика валидатора на все формы на странице 
 
@@ -115,7 +132,7 @@ function addNewCard(evt) {
   renderLoading(true, cardSubmitButton);
   cardToAdd.name = cardNameInput.value;
   cardToAdd.link = cardLinkInput.value;
-  postCustomCard(cardToAdd)
+  api.postCustomCard(cardToAdd)
     .then((newCard) => {
       prependCard(newCard, newCard.owner._id);
       evt.target.reset();
@@ -132,8 +149,10 @@ function addNewCard(evt) {
 
 // Функция добавления карточки в начало списка
 
-function prependCard(card, user) {
-  articlesGrid.prepend(createCard(card, user));
+function prependCard(cardData, user) {
+  const card = new Card(cardData, '.article', user);
+  const cardElement = card.generate();
+  document.querySelector(cardListSelector).prepend(cardElement);
 }
 
 
@@ -149,7 +168,7 @@ function editAuthor(evt) {
   renderLoading(true, profileSubmitButton);
   newUserData.name = nameInput.value;
   newUserData.about = jobInput.value;
-  editAuthorData(newUserData)
+  api.editAuthorData(newUserData)
     .then((updatedData) => {
       authorNamePublished.textContent = updatedData.name;
       authorJobPublished.textContent = updatedData.about;
@@ -175,7 +194,7 @@ function editAvatar(evt) {
   evt.preventDefault(); 
   renderLoading(true, avatarSubmitButton);
   newUserAvatar.link = avatarInput.value;
-  editAuthorAvatar(newUserAvatar)
+  api.editAuthorAvatar(newUserAvatar)
     .then((updatedData) => {
       authorAvatar.src = updatedData.avatar;
       evt.target.reset();

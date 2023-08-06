@@ -1,11 +1,18 @@
 import Api from './Api.js';
 import Card from './Card.js';
 import Section from './Section.js';
+import UserInfo from './UserInfo.js';
 import PopupWithImage from './PopupWithImage.js';
 import { 
   cardListSelector,
   articleTemplateSelector,
   popupForImageSelector,
+  authorNameSelector, 
+  authorJobSelector, 
+  authorAvatarSelector,
+  popupAuthorSelector,
+  popupCardSelector,
+  popupAvatarSelector
   // popupAuthor, 
   // popupCard, 
   // popupAvatar
@@ -80,7 +87,8 @@ function getInitialData() {
       const userData = res[0];
       const initialCards = res[1];
       userId = userData._id;
-      renderUser(userData);
+      //renderUser(userData);
+      userInfo.setUserInfo(userData);
       // renderInitialCards(initialCards);
       cardList.renderItems(initialCards);
     })
@@ -93,12 +101,17 @@ getInitialData();
 
 // рендер стартовых данных юзера с сервера
 
-const renderUser = (user) => {
-  authorNamePublished.textContent = user.name;
-  authorJobPublished.textContent = user.about;
-  authorAvatar.src = user.avatar;
-}
+// const renderUser = (user) => {
+//   authorNamePublished.textContent = user.name;
+//   authorJobPublished.textContent = user.about;
+//   authorAvatar.src = user.avatar;
+// }
 
+const userInfo = new UserInfo({
+  selectorName: authorNameSelector,
+  selectorJob: authorJobSelector,
+  selectorAvatar: authorAvatarSelector
+});
 
 // рендер первичных карточек с сервера
 
@@ -177,20 +190,54 @@ const cardList = new Section({
 //   cardList.renderItems();
 // }
 
-// Вызов установщика валидатора на все формы на странице 
+/***************************************************************************/
 
+/* УДАЛИТЬ КОГДА ГОТОВ ВАЛИДАТОР */
+// Вызов установщика валидатора на все формы на странице 
 enableValidation(settings);
 
+/* РАЗРЕМАРИТЬ ВАЛИДАТОРЫ 
+const editFormValidator = new FormValidator(config, formEditProfile);
+const cardFormValidator = new FormValidator(config, formCardElement);
+const avatarFormValidator = new FormValidator(config, formAvatarElement);
+
+editFormValidator.enableValidation();
+cardFormValidator.enableValidation();
+avatarFormValidator.enableValidation();
+*/
 
 // Установка слушателей открытия попапов
 
+// УДАЛИТЬ
 popupAuthorOpenBtn.addEventListener('click', openPopupAuthor);
-popupCardOpenBtn.addEventListener('click', openPopupCard);
-popupAvatarOpenBtn.addEventListener('click', openPopupAvatar);
+/* РАЗРЕМАРИТЬ по готовности попапа
+popupAuthorOpenBtn.addEventListener('click', () => {
+  popupEditAuthor.setInputValues(userInfo.getUserInfo());
+  popupEditAuthor.open();
+  editFormValidator.resetErrors(); // СБРОС ОШИБОК ФОРМЫ В ВАЛИДАТОРЕ
+});
+*/
 
+// УДАЛИТЬ
+popupCardOpenBtn.addEventListener('click', openPopupCard);
+/* РАЗРЕМАРИТЬ по готовности попапа
+popupCardOpenBtn.addEventListener('click', () => {
+  popupAddCard.open();
+  cardFormValidator.resetErrors();
+});
+*/
+
+// УДАЛИТЬ
+popupAvatarOpenBtn.addEventListener('click', openPopupAvatar);
+/* РАЗРЕМАРИТЬ по готовности попапа
+popupAvatarOpenBtn.addEventListener('click', () => {
+  avatarPopup.open();
+  avatarFormValidator.resetErrors();
+});
+*/
 
 // Отправка формы добавления новой карточки с ее последующим рендером
-
+// УДАЛИТЬ
 function addNewCard(evt) {
   evt.preventDefault(); 
   renderLoading(true, cardSubmitButton);
@@ -211,6 +258,24 @@ function addNewCard(evt) {
     });
 }
 
+// ВМЕСТО addNewCard  
+const popupAddCard = new PopupWithForm(popupCardSelector, (inputValues) => {
+  popupAddCard.renderLoading(true);
+  cardToAdd.name = inputValues.name;
+  cardToAdd.link = inputValues.link;
+  api.postCustomCard(cardToAdd)
+    .then((cardData) => {
+      cardList.addItem(createCard(cardData));
+      cardFormValidator.toggleButton();
+      popupAddCard.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      popupAddCard.renderLoading(false);
+    })
+});
 
 // Функция добавления карточки в начало списка
 
@@ -222,12 +287,13 @@ function addNewCard(evt) {
 
 
 // Установка слушателя отправки формы добавления новой карточки
-
+// УДАЛИТЬ
 cardForm.addEventListener('submit', addNewCard);
-
+// ВМЕСТО слушателя addNewCard
+popupAddCard.setEventListeners();
 
 // Отправка формы редактирования профиля автора
-
+// УДАЛИТЬ
 function editAuthor(evt) {
   evt.preventDefault(); 
   renderLoading(true, profileSubmitButton);
@@ -247,14 +313,32 @@ function editAuthor(evt) {
     });
 }
 
+// ВМЕСТО editAuthor  
+const popupEditAuthor = new PopupWithForm(popupAuthorSelector, (inputValues) => {
+  popupEditAuthor.renderLoading(true);
+  newUserData.name = inputValues.name;
+  newUserData.about = inputValues.about;
+  api.editAuthorData(newUserData)
+    .then((updatedData) => {
+      userInfo.setUserInfo(updatedData);
+      popupEditAuthor.close()
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      popupEditAuthor.renderLoading(false);
+    })
+});
 
 // Установка слушателя отправки формы редактирования профиля
-
+// УДАЛИТЬ
 profileForm.addEventListener('submit', editAuthor);
-
+// ВМЕСТО слушателя editAuthor
+popupEditAuthor.setEventListeners();
 
 // Отправка формы обновления аватара
-
+// УДАЛИТЬ
 function editAvatar(evt) {
   evt.preventDefault(); 
   renderLoading(true, avatarSubmitButton);
@@ -273,8 +357,26 @@ function editAvatar(evt) {
     });
 }
 
+// ВМЕСТО editAvatar  
+const popapAvatar = new PopupWithForm(popupAvatarSelector,  (inputValues) => {
+  popapAvatar.renderLoading(true);
+  newUserAvatar.link = inputValues.avatar;
+  api.editAuthorAvatar(newUserAvatar)
+      .then((updatedData) => {
+        userInfo.setUserInfo(updatedData);
+        popapAvatar.close();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        popapAvatar.renderLoading(false);
+      });
+  }
+);
 
 // Установка слушателя отправки формы редактирования профиля
-
+// УДАЛИТЬ
 avatarForm.addEventListener('submit', editAvatar);
-
+// ВМЕСТО слушателя avatarForm
+avatarPopup.setEventListeners();

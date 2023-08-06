@@ -3,7 +3,7 @@ import { resetError } from './validate.js';
 
 
 // полный функционал открытия попапа с навешиванием слушателей
-
+// ЗАКОММЕНТИТЬ
 export function openPopup(popup) {
   popup.classList.add('popup_opened');
   popup.addEventListener('mousedown', closePopupByOverlayClick);
@@ -12,7 +12,7 @@ export function openPopup(popup) {
 
 
 // полный функционал закрытия попапа с удалением слушателей
-
+// ЗАКОММЕНТИТЬ
 export function closePopup(popup) {
   popup.removeEventListener('mousedown', closePopupByOverlayClick);
   document.removeEventListener('keydown', closePopupByEscape);
@@ -22,29 +22,29 @@ export function closePopup(popup) {
 
 // закрытие попапа по клику на оверлей
 
-function closePopupByOverlayClick(evt) {
-if (evt.currentTarget === evt.target) {
-  closePopup(evt.currentTarget);
-};
-}
+// function closePopupByOverlayClick(evt) {
+// if (evt.currentTarget === evt.target) {
+//   closePopup(evt.currentTarget);
+// };
+// }
 
 
 // закрытие попапа по нажатию на Esc
 
-function closePopupByEscape(evt) {
-if (evt.key === 'Escape') {
-  const openedPopup = document.querySelector('.popup_opened');
-  closePopup(openedPopup);
-};
-}
+// function closePopupByEscape(evt) {
+// if (evt.key === 'Escape') {
+//   const openedPopup = document.querySelector('.popup_opened');
+//   closePopup(openedPopup);
+// };
+// }
 
 
 // Универсальный обработчик закрытия попапа по крестику
 
-document.querySelectorAll('.popup__close').forEach((btn) => {
-    const popupToClose = btn.closest('.popup');
-    btn.addEventListener('click', () => closePopup(popupToClose));
-});
+// document.querySelectorAll('.popup__close').forEach((btn) => {
+//     const popupToClose = btn.closest('.popup');
+//     btn.addEventListener('click', () => closePopup(popupToClose));
+// });
 
 
 // Открытие попапа редактирования профиля с подстановкой текущих значений

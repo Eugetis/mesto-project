@@ -1,7 +1,13 @@
 import Api from './Api.js';
 import Card from './Card.js';
 import Section from './Section.js';
-import { cardListSelector 
+import PopupWithImage from './PopupWithImage.js';
+import { 
+  cardListSelector,
+  popupForImageSelector,
+  // popupAuthor, 
+  // popupCard, 
+  // popupAvatar
 } from '../utils/constants.js';
 
 export const api = new Api({
@@ -38,13 +44,13 @@ const avatarForm = document.forms['avatar-form'];
 const newUserAvatar = avatarForm.querySelector('fieldset.popup__form-fields');
 const avatarSubmitButton = avatarForm.querySelector('.popup__form-button');
 
-//export const articleTemplate = document.querySelector('#article').content;
-export const popupPic = document.querySelector('.popup_type_pic');
-export const popupPicPicture = popupPic.querySelector('.popup__picture');
-export const popupPicCaption = popupPic.querySelector('.popup__caption');
-export const popupAuthor = document.querySelector('.p-author');
-export const popupCard = document.querySelector('.p-card');
-export const popupAvatar = document.querySelector('.p-avatar');
+//  export const articleTemplate = document.querySelector('#article').content;
+// export const popupPic = document.querySelector('.popup_type_pic');
+// export const popupPicPicture = popupPic.querySelector('.popup__picture');
+// export const popupPicCaption = popupPic.querySelector('.popup__caption');
+export const popupAuthor = document.querySelector('.p-author'); // ЗАКОММЕНТИТЬ // перенес в constants.js
+export const popupCard = document.querySelector('.p-card'); // ЗАКОММЕНТИТЬ // перенес в constants.js
+export const popupAvatar = document.querySelector('.p-avatar'); // ЗАКОММЕНТИТЬ // перенес в constants.js
 export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');
@@ -104,7 +110,13 @@ const renderInitialCards = function(cards, userId) {
   const cardList = new Section({
     data: cards,
     renderer: (cardData, userId) => {
-      const card = new Card(cardData, '.article', userId);
+      const card = new Card({ 
+        data: cardData, 
+        handleClick: () => { // написал обработчик, который нужно повесить на клик по картинке при создании карточки
+          const popupWithImage = new PopupWithImage(cardData, popupForImageSelector);
+          popupWithImage.open();
+        }
+      }, '.article', userId);
       const cardElement = card.generate();
       cardList.setItem(cardElement);
     }

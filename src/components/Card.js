@@ -1,13 +1,14 @@
 import { api } from './index.js';
 
 export default class Card {
-  constructor(data, selector, userId) {
-    this._selector = selector;
+  constructor({ data, handleClick }, selector, userId) {
     this._name = data.name;
     this._link = data.link;
     this._likes = data.likes;
     this._id = data._id;
     this._owner = data.owner;
+    this._handleClick = handleClick; // добавил 
+    this._selector = selector;
     this._userId = userId;
   }
 
@@ -71,6 +72,9 @@ export default class Card {
         });
       });
     }
+    
+    // вешаем слушатель клика для открытия попапа с картинкой
+    this._element.querySelector('.articles__photo').addEventListener('click', this._handleClick.bind(this));
 
     return this._element;
   }

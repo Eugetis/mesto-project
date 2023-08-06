@@ -74,7 +74,7 @@ export default class Card {
     }
     
     // вешаем слушатель клика для открытия попапа с картинкой
-    this._element.querySelector('.articles__photo').addEventListener('click', this._handleClick.bind(this));
+    this._element.querySelector('.articles__photo').addEventListener('click', () => { this._handleClick() });
 
     return this._element;
   }

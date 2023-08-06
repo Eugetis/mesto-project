@@ -6,9 +6,9 @@ export default class Popup {
 
   open() {
     this._popup.classList.add('popup_opened');
-    this._popup.setEventListeners();
-    this._popup.addEventListener('keydown', () => {
-        this._handleEscClose();
+    this.setEventListeners();
+    document.addEventListener('keydown', (evt) => {
+        this._handleEscClose(evt);
     });
   }
 
@@ -16,19 +16,19 @@ export default class Popup {
     this._popup.classList.remove('popup_opened');
   }
 
-  _handleEscClose() {
+  _handleEscClose(evt) {
     if (evt.key === 'Escape') {
-      this._popup.close();
+      this.close();
     };
   }
 
   setEventListeners() {
     // слушатель закрытия по клику на крестик
-    this._popup.querySelector('.popup__close').addEventListener('click', this._popup.close()); 
+    this._popup.querySelector('.popup__close').addEventListener('click', () => {this.close()}); 
     // слушатель закрытия по клику на оверлей
     this._popup.addEventListener('click', (evt) => {
       if (evt.currentTarget === evt.target) {
-        this._popup.close();
+        this.close();
       };
     }); 
   }

@@ -1,15 +1,15 @@
-import { api } from './index.js';
-
 export default class Card {
-  constructor({ data, handleClick }, selector, userId) {
+  constructor({ data, handleCardClick, handleLikeClick, handleDeleteClick }, selector, userId) {
     this._name = data.name;
     this._link = data.link;
     this._likes = data.likes;
     this._id = data._id;
     this._owner = data.owner;
-    this._handleClick = handleClick; // добавил 
     this._selector = selector;
     this._userId = userId;
+    this._handleCardClick = handleCardClick;
+    this._handleDeleteClick = handleDeleteClick;
+    this._handleLikeClick = handleLikeClick;
   }
 
   _getElement() {
@@ -36,26 +36,10 @@ export default class Card {
       iconLike.classList.add('articles__like_active');
     }
     
+    this._isLiked = iconLike.classList.contains('articles__like_active');
+
     iconLike.addEventListener('click', () => {
-      if (!iconLike.classList.contains('articles__like_active')) {
-        api.likeCard(this._id)
-        .then((cardNewData) => {
-          iconLike.classList.add('articles__like_active');
-          this._element.querySelector('.articles__likes-count').textContent = cardNewData.likes.length;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      } else {
-        api.unlikeCard(this._id)
-        .then((cardNewData) => {
-          iconLike.classList.remove('articles__like_active');
-          this._element.querySelector('.articles__likes-count').textContent = cardNewData.likes.length;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      }
+      this._handleLikeClick(this._id);
     });
 
     const iconDelete = this._element.querySelector('.articles__delete');
@@ -63,23 +47,38 @@ export default class Card {
       iconDelete.remove();
     } else {
       iconDelete.addEventListener('click', () => {
-        api.deleteCard(this._id)
-        .then(() => {
-          this._element.remove();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        this._handleDeleteClick(this._id);
       });
     }
     
     // вешаем слушатель клика для открытия попапа с картинкой
-    this._element.querySelector('.articles__photo').addEventListener('click', () => { this._handleClick() });
+    this._element.querySelector('.articles__photo').addEventListener('click', () => { this._handleCardClick() });
 
     return this._element;
   }
 
+  delete() {
+    this._element.remove();
+  }
+
+  isLiked() {
+    return this._isLiked;
+  }
+
+  setLike(cardNewData) {
+    this._element.querySelector('.articles__like').classList.add('articles__like_active');
+    this._element.querySelector('.articles__likes-count').textContent = cardNewData.likes.length;
+    this._isLiked = true;
+  }
+
+  unsetLike(cardNewData) {
+    this._element.querySelector('.articles__like').classList.remove('articles__like_active');
+    this._element.querySelector('.articles__likes-count').textContent = cardNewData.likes.length;
+    this._isLiked = false;
+  }
 }
+
+
 
 // import { openPopup } from './modal.js';
 // import { popupPic, popupPicPicture, popupPicCaption, articleTemplate } from './index.js';

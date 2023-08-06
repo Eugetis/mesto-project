@@ -4,6 +4,7 @@ import Section from './Section.js';
 import PopupWithImage from './PopupWithImage.js';
 import { 
   cardListSelector,
+  articleTemplateSelector,
   popupForImageSelector,
   // popupAuthor, 
   // popupCard, 
@@ -27,6 +28,7 @@ import { enableValidation } from './validate.js';
 import { openPopupAuthor, openPopupCard, openPopupAvatar, closePopup } from './modal.js';
 import { getUserData, getInitialCards, postCustomCard, editAuthorData, editAuthorAvatar } from './Api.js';
 import { renderLoading } from './utils';
+import { data } from 'autoprefixer';
 
 const popupAuthorOpenBtn = document.querySelector('.author__name-edit');
 const profileForm = document.forms['profile-form'];
@@ -55,7 +57,8 @@ export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');
 export const authorJobPublished = document.querySelector('.author__position');
-// export let userId = '';
+
+let userId = '';
 const authorAvatar = document.querySelector('.author__avatar');
 const avatarInput = avatarForm.elements.avatarLink;
 
@@ -76,9 +79,10 @@ function getInitialData() {
     .then((res) => {
       const userData = res[0];
       const initialCards = res[1];
-      const userId = userData._id;
+      userId = userData._id;
       renderUser(userData);
-      renderInitialCards(initialCards, userId);
+      // renderInitialCards(initialCards);
+      cardList.renderItems(initialCards);
     })
     .catch((err) => {
       console.log(err);
@@ -106,24 +110,72 @@ const renderUser = (user) => {
 //   });
 // }
 
-const renderInitialCards = function(cards, userId) {
-  const cardList = new Section({
-    data: cards,
-    renderer: (cardData, userId) => {
-      const card = new Card({ 
-        data: cardData, 
-        handleClick: () => { // написал обработчик, который нужно повесить на клик по картинке при создании карточки
-          const popupWithImage = new PopupWithImage(cardData, popupForImageSelector);
-          popupWithImage.open();
-        }
-      }, '.article', userId);
-      const cardElement = card.generate();
-      cardList.setItem(cardElement);
-    }
-  }, cardListSelector, userId);
+const popupWithImage = new PopupWithImage(popupForImageSelector);
 
-  cardList.renderItems();
+const createCard = (item) => {
+  const card = new Card({
+    data: item,
+    handleCardClick: () => {
+      popupWithImage.open({link: item.link, name: item.name});
+    },
+    handleLikeClick: (id) => {
+      if (!card.isLiked()) {
+        api.likeCard(id)
+        .then((res) => {
+          card.setLike(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      } else {
+        api.unlikeCard(id)
+        .then((res) => {
+          card.unsetLike(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }
+    },
+    handleDeleteClick: (id) => {
+      api.deleteCard(id)
+        .then(() => {
+          card.delete();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, articleTemplateSelector, userId);
+  const cardElement = card.generate();
+  return cardElement;
 }
+
+const cardList = new Section({
+  items: [],
+  renderer: (item) => {
+    cardList.addItem(createCard(item));
+  }
+}, cardListSelector);
+
+// const renderInitialCards = function(cards) {
+//   const cardList = new Section({
+//     data: cards,
+//     renderer: (cardData, userId) => {
+//       const card = new Card({ 
+//         data: cardData, 
+//         handleClick: () => { // написал обработчик, который нужно повесить на клик по картинке при создании карточки
+//           const popupWithImage = new PopupWithImage(cardData, popupForImageSelector);
+//           popupWithImage.open();
+//         }
+//       }, '.article', userId);
+//       const cardElement = card.generate();
+//       cardList.setItem(cardElement);
+//     }
+//   }, cardListSelector, userId);
+
+//   cardList.renderItems();
+// }
 
 // Вызов установщика валидатора на все формы на странице 
 
@@ -145,8 +197,9 @@ function addNewCard(evt) {
   cardToAdd.name = cardNameInput.value;
   cardToAdd.link = cardLinkInput.value;
   api.postCustomCard(cardToAdd)
-    .then((newCard) => {
-      prependCard(newCard, newCard.owner._id);
+    .then((cardData) => {
+      //prependCard(newCard, newCard.owner._id);
+      cardList.addItem(createCard(cardData));
       evt.target.reset();
       closePopup(evt.target.closest('.popup'));
     })
@@ -161,11 +214,11 @@ function addNewCard(evt) {
 
 // Функция добавления карточки в начало списка
 
-function prependCard(cardData, user) {
-  const card = new Card(cardData, '.article', user);
-  const cardElement = card.generate();
-  document.querySelector(cardListSelector).prepend(cardElement);
-}
+// function prependCard(cardData, user) {
+//   const card = new Card(cardData, '.article', user);
+//   const cardElement = card.generate();
+//   document.querySelector(cardListSelector).prepend(cardElement);
+// }
 
 
 // Установка слушателя отправки формы добавления новой карточки

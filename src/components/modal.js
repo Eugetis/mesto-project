@@ -1,5 +1,6 @@
-import { popupAuthor, popupCard, popupAvatar, nameInput, jobInput, authorNamePublished, authorJobPublished, settings } from './index.js';
-import { resetError } from './validate.js';
+import { popupAuthor, popupCard, popupAvatar, nameInput, jobInput, authorNamePublished, authorJobPublished } from './index.js';
+// import { resetError } from './validate.js';
+import { settings } from '../utils/constants.js';
 
 
 // полный функционал открытия попапа с навешиванием слушателей

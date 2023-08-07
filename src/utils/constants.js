@@ -19,3 +19,12 @@ export const popupForImageSelector = '.popup_type_pic';
 // export const popupForImageCaption = document.querySelector('.popup__caption');
 export const popupForImagePictureSelector = '.popup__picture';
 export const popupForImageCaptionSelector = '.popup__caption';
+
+export const settings = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__form-field',
+    submitButtonSelector: '.popup__form-button',
+    inactiveButtonClass: 'popup__form-button_inactive',
+    inputErrorClass: 'popup__form-field_type-error',
+    errorClass: 'popup__form-field-error_active'
+};

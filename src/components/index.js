@@ -1,9 +1,11 @@
 import Api from './Api.js';
 import Card from './Card.js';
+import FormValidator from './FormValidator.js';
 import Section from './Section.js';
 import UserInfo from './UserInfo.js';
 import PopupWithImage from './PopupWithImage.js';
 import { 
+  settings,
   cardListSelector,
   articleTemplateSelector,
   popupForImageSelector,
@@ -30,7 +32,7 @@ export const api = new Api({
 
 
 import '../pages/style.css';
-import { enableValidation } from './validate.js';
+// import { enableValidation } from './validate.js';
 // import { createCard } from './Card.js';
 import { openPopupAuthor, openPopupCard, openPopupAvatar, closePopup } from './modal.js';
 import { getUserData, getInitialCards, postCustomCard, editAuthorData, editAuthorAvatar } from './Api.js';
@@ -69,14 +71,7 @@ let userId = '';
 const authorAvatar = document.querySelector('.author__avatar');
 const avatarInput = avatarForm.elements.avatarLink;
 
-export const settings = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__form-field',
-  submitButtonSelector: '.popup__form-button',
-  inactiveButtonClass: 'popup__form-button_inactive',
-  inputErrorClass: 'popup__form-field_type-error',
-  errorClass: 'popup__form-field-error_active'
-};
+
 
 
 // Получение и обработка первичных данных с сервера
@@ -194,17 +189,17 @@ const cardList = new Section({
 
 /* УДАЛИТЬ КОГДА ГОТОВ ВАЛИДАТОР */
 // Вызов установщика валидатора на все формы на странице 
-enableValidation(settings);
+// enableValidation(settings);
 
-/* РАЗРЕМАРИТЬ ВАЛИДАТОРЫ 
-const editFormValidator = new FormValidator(config, formEditProfile);
-const cardFormValidator = new FormValidator(config, formCardElement);
-const avatarFormValidator = new FormValidator(config, formAvatarElement);
+
+const editFormValidator = new FormValidator(settings, formEditProfile);
+const cardFormValidator = new FormValidator(settings, formCardElement);
+const avatarFormValidator = new FormValidator(settings, formAvatarElement);
 
 editFormValidator.enableValidation();
 cardFormValidator.enableValidation();
 avatarFormValidator.enableValidation();
-*/
+
 
 // Установка слушателей открытия попапов
 

@@ -24,9 +24,10 @@ import {
   cardToAdd,
   popupAvatarOpenBtn,
   avatarForm,
-  newUserAvatar,
   nameInput,
-  jobInput
+  jobInput,
+  popupForImagePictureSelector, 
+  popupForImageCaptionSelector
 } from '../utils/constants.js';
 
 import './style.css';
@@ -77,7 +78,7 @@ const userInfo = new UserInfo({
 
 // рендер первичных карточек с сервера
 
-const popupWithImage = new PopupWithImage(popupForImageSelector);
+const popupWithImage = new PopupWithImage(popupForImageSelector, popupForImagePictureSelector, popupForImageCaptionSelector);
 popupWithImage.setEventListeners();
 
 
@@ -212,8 +213,7 @@ popupEditAuthor.setEventListeners();
 
 const popupAvatar = new PopupWithForm(popupAvatarSelector, (inputValues) => {
   popupAvatar.renderLoading(true);
-  newUserAvatar.link = inputValues.avatarLink;
-  api.editAuthorAvatar(newUserAvatar)
+  api.editAuthorAvatar({ link: inputValues.avatarLink })
       .then((updatedData) => {
         userInfo.setUserInfo(updatedData);
         popupAvatar.close();

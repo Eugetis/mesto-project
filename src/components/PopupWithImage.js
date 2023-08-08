@@ -1,13 +1,12 @@
 import Popup from './Popup.js';
-import { popupForImagePictureSelector, popupForImageCaptionSelector } from '../utils/constants.js';
 
 
 export default class PopupWithImage extends Popup {
   
-  constructor(selector) {
+  constructor(selector, pictureSelector, captionSelector) {
     super(selector);
-    this._popupPicture = this._popup.querySelector(popupForImagePictureSelector);
-    this._popupCaption = this._popup.querySelector(popupForImageCaptionSelector);
+    this._popupPicture = this._popup.querySelector(pictureSelector);
+    this._popupCaption = this._popup.querySelector(captionSelector);
   }
 
   // перезаписанный родительский метод открытия попапа

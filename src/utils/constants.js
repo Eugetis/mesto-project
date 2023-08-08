@@ -17,7 +17,6 @@ export const cardForm = document.forms['card-form'];
 export const cardToAdd = cardForm.querySelector('fieldset.popup__form-fields');
 export const popupAvatarOpenBtn = document.querySelector('.author__avatar-edit');
 export const avatarForm = document.forms['avatar-form'];
-export const newUserAvatar = avatarForm.querySelector('fieldset.popup__form-fields');
 export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');

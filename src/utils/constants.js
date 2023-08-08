@@ -1,24 +1,27 @@
 export const cardListSelector = '.articles__grid';
 export const articleTemplateSelector = '.article';
-
 export const authorNameSelector = '.author__name-text';
 export const authorJobSelector = '.author__position';
 export const authorAvatarSelector = '.author__avatar';
-
-// import { nameInput, jobInput, authorNamePublished, authorJobPublished, settings } from './index.js';
-
-// export const popupAuthor = document.querySelector('.p-author');
-// export const popupCard = document.querySelector('.p-card');
-// export const popupAvatar = document.querySelector('.p-avatar');
 export const popupAuthorSelector = '.p-author';
 export const popupCardSelector = '.p-card';
 export const popupAvatarSelector = '.p-avatar';
-
 export const popupForImageSelector = '.popup_type_pic';
-// export const popupForImagePicture = document.querySelector('.popup__picture');
-// export const popupForImageCaption = document.querySelector('.popup__caption');
 export const popupForImagePictureSelector = '.popup__picture';
 export const popupForImageCaptionSelector = '.popup__caption';
+export const popupAuthorOpenBtn = document.querySelector('.author__name-edit');
+export const profileForm = document.forms['profile-form'];
+export const newUserData = profileForm.querySelector('fieldset.popup__form-fields');
+export const popupCardOpenBtn = document.querySelector('.author__add');
+export const cardForm = document.forms['card-form'];
+export const cardToAdd = cardForm.querySelector('fieldset.popup__form-fields');
+export const popupAvatarOpenBtn = document.querySelector('.author__avatar-edit');
+export const avatarForm = document.forms['avatar-form'];
+export const newUserAvatar = avatarForm.querySelector('fieldset.popup__form-fields');
+export const nameInput = profileForm.elements.authorName;
+export const jobInput = profileForm.elements.authorPosition;
+export const authorNamePublished = document.querySelector('.author__name-text');
+export const authorJobPublished = document.querySelector('.author__position');
 
 export const settings = {
     formSelector: '.popup__form',

@@ -1,25 +1,25 @@
 import Popup from './Popup.js';
+import { settings } from '../utils/constants.js';
+
 
 export default class PopupWithForm extends Popup {
-  // Кроме селектора попапа принимает в конструктор колбэк сабмита формы (содержится метод класса Api)
+
   constructor(selector, formSubmitCallback) {
     super(selector);
-    this._popupForm = this._popup.querySelector('.popup__form');
-    this._popupSubmitButton = this._popup.querySelector('.popup__form-button');
+    this._popupForm = this._popup.querySelector(settings.formSelector);
+    this._popupSubmitButton = this._popup.querySelector(settings.submitButtonSelector);
     this._formSubmitCallback = formSubmitCallback;
   }
   
-  // Содержит приватный метод _getInputValues, который собирает данные всех полей формы.
+  // метод собирает данные всех полей формы
   _getInputValues() {
-    this._inputList = Array.from(this._popupForm.querySelectorAll('.popup__form-field'));
+    this._inputList = Array.from(this._popupForm.querySelectorAll(settings.inputSelector));
     this._formValues = {};
     this._inputList.forEach(input => this._formValues[input.name] = input.value);
     return this._formValues;
   }
   
-  //Перезаписывает родительский метод setEventListeners. 
-  // Метод setEventListeners класса PopupWithForm должен не только добавлять обработчик клика иконке закрытия, 
-  // но и добавлять обработчик сабмита формы.
+  // перезаписанный родительский метод добавляет обработчики клика и сабмита формы
   setEventListeners() {
     super.setEventListeners();
     this._popupForm.addEventListener('submit', (evt) => {
@@ -28,12 +28,13 @@ export default class PopupWithForm extends Popup {
     });
   }
 
-  // Перезаписывает родительский метод close, так как при закрытии попапа форма должна ещё и сбрасываться.
+  // перезаписанный родительский метод close с добавленным сбросом формы
   close() {
     super.close();
     this._popupForm.reset();
   }
 
+  // метод для управления текстом кнопки сабмита
   renderLoading(isLoading) {
     if(isLoading) {
       this._popupSubmitButton.innerText = 'Сохранение...';
@@ -43,10 +44,3 @@ export default class PopupWithForm extends Popup {
   }
 
 }
-
-// resetError(popupAuthor.querySelector('.popup__form'), settings);
-
-
-
-
-// Для каждого попапа создавайте свой экземпляр класса PopupWithForm.

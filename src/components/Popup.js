@@ -6,7 +6,7 @@ export default class Popup {
 
   open() {
     this._popup.classList.add('popup_opened');
-    this.setEventListeners();
+    //this.setEventListeners();
     document.addEventListener('keydown', (evt) => {
         this._handleEscClose(evt);
     });
@@ -14,6 +14,10 @@ export default class Popup {
 
   close() {
     this._popup.classList.remove('popup_opened');
+    // добавлено удаление слушателя escape при закрытии попапа, чтобы не плодить их в памяти из-за открытия
+    document.removeEventListener('keydown', (evt) => {
+      this._handleEscClose(evt);
+    });
   }
 
   _handleEscClose(evt) {

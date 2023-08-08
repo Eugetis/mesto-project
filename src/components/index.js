@@ -4,6 +4,7 @@ import FormValidator from './FormValidator.js';
 import Section from './Section.js';
 import UserInfo from './UserInfo.js';
 import PopupWithImage from './PopupWithImage.js';
+import PopupWithForm from './PopupWithForm.js';
 import { 
   settings,
   cardListSelector,
@@ -61,7 +62,7 @@ const avatarSubmitButton = avatarForm.querySelector('.popup__form-button');
 // export const popupPicCaption = popupPic.querySelector('.popup__caption');
 export const popupAuthor = document.querySelector('.p-author'); // ЗАКОММЕНТИТЬ // перенес в constants.js
 export const popupCard = document.querySelector('.p-card'); // ЗАКОММЕНТИТЬ // перенес в constants.js
-export const popupAvatar = document.querySelector('.p-avatar'); // ЗАКОММЕНТИТЬ // перенес в constants.js
+//export const popupAvatar = document.querySelector('.p-avatar'); // ЗАКОММЕНТИТЬ // перенес в constants.js
 export const nameInput = profileForm.elements.authorName;
 export const jobInput = profileForm.elements.authorPosition;
 export const authorNamePublished = document.querySelector('.author__name-text');
@@ -119,6 +120,7 @@ const userInfo = new UserInfo({
 // }
 
 const popupWithImage = new PopupWithImage(popupForImageSelector);
+popupWithImage.setEventListeners();
 
 const createCard = (item) => {
   const card = new Card({
@@ -192,9 +194,9 @@ const cardList = new Section({
 // enableValidation(settings);
 
 
-const editFormValidator = new FormValidator(settings, formEditProfile);
-const cardFormValidator = new FormValidator(settings, formCardElement);
-const avatarFormValidator = new FormValidator(settings, formAvatarElement);
+const editFormValidator = new FormValidator(settings, profileForm);
+const cardFormValidator = new FormValidator(settings, cardForm);
+const avatarFormValidator = new FormValidator(settings, avatarForm);
 
 editFormValidator.enableValidation();
 cardFormValidator.enableValidation();
@@ -204,64 +206,63 @@ avatarFormValidator.enableValidation();
 // Установка слушателей открытия попапов
 
 // УДАЛИТЬ
-popupAuthorOpenBtn.addEventListener('click', openPopupAuthor);
-/* РАЗРЕМАРИТЬ по готовности попапа
+// popupAuthorOpenBtn.addEventListener('click', openPopupAuthor);
+// РАЗРЕМАРИТЬ по готовности попапа
 popupAuthorOpenBtn.addEventListener('click', () => {
-  popupEditAuthor.setInputValues(userInfo.getUserInfo());
+  const userData = userInfo.getUserInfo();
+  nameInput.value = userData.name;
+  jobInput.value = userData.about;
   popupEditAuthor.open();
   editFormValidator.resetErrors(); // СБРОС ОШИБОК ФОРМЫ В ВАЛИДАТОРЕ
 });
-*/
+
 
 // УДАЛИТЬ
-popupCardOpenBtn.addEventListener('click', openPopupCard);
-/* РАЗРЕМАРИТЬ по готовности попапа
+//popupCardOpenBtn.addEventListener('click', openPopupCard);
+// РАЗРЕМАРИТЬ по готовности попапа
 popupCardOpenBtn.addEventListener('click', () => {
   popupAddCard.open();
   cardFormValidator.resetErrors();
 });
-*/
 
 // УДАЛИТЬ
-popupAvatarOpenBtn.addEventListener('click', openPopupAvatar);
-/* РАЗРЕМАРИТЬ по готовности попапа
+//popupAvatarOpenBtn.addEventListener('click', openPopupAvatar);
+// РАЗРЕМАРИТЬ по готовности попапа
 popupAvatarOpenBtn.addEventListener('click', () => {
-  avatarPopup.open();
+  popupAvatar.open();
   avatarFormValidator.resetErrors();
 });
-*/
 
-// Отправка формы добавления новой карточки с ее последующим рендером
-// УДАЛИТЬ
-function addNewCard(evt) {
-  evt.preventDefault(); 
-  renderLoading(true, cardSubmitButton);
-  cardToAdd.name = cardNameInput.value;
-  cardToAdd.link = cardLinkInput.value;
-  api.postCustomCard(cardToAdd)
-    .then((cardData) => {
-      //prependCard(newCard, newCard.owner._id);
-      cardList.addItem(createCard(cardData));
-      evt.target.reset();
-      closePopup(evt.target.closest('.popup'));
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      renderLoading(false, cardSubmitButton);
-    });
-}
+// // Отправка формы добавления новой карточки с ее последующим рендером
+// // УДАЛИТЬ
+// function addNewCard(evt) {
+//   evt.preventDefault(); 
+//   renderLoading(true, cardSubmitButton);
+//   cardToAdd.name = cardNameInput.value;
+//   cardToAdd.link = cardLinkInput.value;
+//   api.postCustomCard(cardToAdd)
+//     .then((cardData) => {
+//       //prependCard(newCard, newCard.owner._id);
+//       cardList.addItem(createCard(cardData));
+//       evt.target.reset();
+//       closePopup(evt.target.closest('.popup'));
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     })
+//     .finally(() => {
+//       renderLoading(false, cardSubmitButton);
+//     });
+// }
 
 // ВМЕСТО addNewCard  
 const popupAddCard = new PopupWithForm(popupCardSelector, (inputValues) => {
   popupAddCard.renderLoading(true);
-  cardToAdd.name = inputValues.name;
-  cardToAdd.link = inputValues.link;
+  cardToAdd.name = inputValues.cardName;
+  cardToAdd.link = inputValues.imgLink;
   api.postCustomCard(cardToAdd)
     .then((cardData) => {
       cardList.addItem(createCard(cardData));
-      cardFormValidator.toggleButton();
       popupAddCard.close();
     })
     .catch((err) => {
@@ -283,36 +284,36 @@ const popupAddCard = new PopupWithForm(popupCardSelector, (inputValues) => {
 
 // Установка слушателя отправки формы добавления новой карточки
 // УДАЛИТЬ
-cardForm.addEventListener('submit', addNewCard);
+//cardForm.addEventListener('submit', addNewCard);
 // ВМЕСТО слушателя addNewCard
 popupAddCard.setEventListeners();
 
 // Отправка формы редактирования профиля автора
-// УДАЛИТЬ
-function editAuthor(evt) {
-  evt.preventDefault(); 
-  renderLoading(true, profileSubmitButton);
-  newUserData.name = nameInput.value;
-  newUserData.about = jobInput.value;
-  api.editAuthorData(newUserData)
-    .then((updatedData) => {
-      authorNamePublished.textContent = updatedData.name;
-      authorJobPublished.textContent = updatedData.about;
-      closePopup(evt.target.closest('.popup'));
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      renderLoading(false, profileSubmitButton);
-    });
-}
+// // УДАЛИТЬ
+// function editAuthor(evt) {
+//   evt.preventDefault(); 
+//   renderLoading(true, profileSubmitButton);
+//   newUserData.name = nameInput.value;
+//   newUserData.about = jobInput.value;
+//   api.editAuthorData(newUserData)
+//     .then((updatedData) => {
+//       authorNamePublished.textContent = updatedData.name;
+//       authorJobPublished.textContent = updatedData.about;
+//       closePopup(evt.target.closest('.popup'));
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     })
+//     .finally(() => {
+//       renderLoading(false, profileSubmitButton);
+//     });
+// }
 
 // ВМЕСТО editAuthor  
 const popupEditAuthor = new PopupWithForm(popupAuthorSelector, (inputValues) => {
   popupEditAuthor.renderLoading(true);
-  newUserData.name = inputValues.name;
-  newUserData.about = inputValues.about;
+  newUserData.name = inputValues.authorName;
+  newUserData.about = inputValues.authorPosition;
   api.editAuthorData(newUserData)
     .then((updatedData) => {
       userInfo.setUserInfo(updatedData);
@@ -327,51 +328,51 @@ const popupEditAuthor = new PopupWithForm(popupAuthorSelector, (inputValues) => 
 });
 
 // Установка слушателя отправки формы редактирования профиля
-// УДАЛИТЬ
-profileForm.addEventListener('submit', editAuthor);
+// // УДАЛИТЬ
+// profileForm.addEventListener('submit', editAuthor);
 // ВМЕСТО слушателя editAuthor
 popupEditAuthor.setEventListeners();
 
 // Отправка формы обновления аватара
-// УДАЛИТЬ
-function editAvatar(evt) {
-  evt.preventDefault(); 
-  renderLoading(true, avatarSubmitButton);
-  newUserAvatar.link = avatarInput.value;
-  api.editAuthorAvatar(newUserAvatar)
-    .then((updatedData) => {
-      authorAvatar.src = updatedData.avatar;
-      evt.target.reset();
-      closePopup(evt.target.closest('.popup'));
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      renderLoading(false, avatarSubmitButton);
-    });
-}
+// // УДАЛИТЬ
+// function editAvatar(evt) {
+//   evt.preventDefault(); 
+//   renderLoading(true, avatarSubmitButton);
+//   newUserAvatar.link = avatarInput.value;
+//   api.editAuthorAvatar(newUserAvatar)
+//     .then((updatedData) => {
+//       authorAvatar.src = updatedData.avatar;
+//       evt.target.reset();
+//       closePopup(evt.target.closest('.popup'));
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     })
+//     .finally(() => {
+//       renderLoading(false, avatarSubmitButton);
+//     });
+// }
 
 // ВМЕСТО editAvatar  
-const popapAvatar = new PopupWithForm(popupAvatarSelector,  (inputValues) => {
-  popapAvatar.renderLoading(true);
-  newUserAvatar.link = inputValues.avatar;
+const popupAvatar = new PopupWithForm(popupAvatarSelector,  (inputValues) => {
+  popupAvatar.renderLoading(true);
+  newUserAvatar.link = inputValues.avatarLink;
   api.editAuthorAvatar(newUserAvatar)
       .then((updatedData) => {
         userInfo.setUserInfo(updatedData);
-        popapAvatar.close();
+        popupAvatar.close();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        popapAvatar.renderLoading(false);
+        popupAvatar.renderLoading(false);
       });
   }
 );
 
 // Установка слушателя отправки формы редактирования профиля
 // УДАЛИТЬ
-avatarForm.addEventListener('submit', editAvatar);
+// avatarForm.addEventListener('submit', editAvatar);
 // ВМЕСТО слушателя avatarForm
-avatarPopup.setEventListeners();
+popupAvatar.setEventListeners();

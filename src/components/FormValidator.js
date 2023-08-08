@@ -6,13 +6,8 @@ export default class FormValidator {
     this._submitButtonElement = this._formElement.querySelector(this._settings.submitButtonSelector);
   }
 
-
-  // МЕТОД - ПРОВЕРКА ВАЛИДНОСТИ ПОЛЯ
-
-  _checkInputValidity() {
-
     // показать ошибку валидации поля
-    const showInputError = (inputElement, errorMessage) => {
+    _showInputError(inputElement, errorMessage) {
       const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
       inputElement.classList.add(this._settings.inputErrorClass);
       errorElement.textContent = errorMessage;
@@ -20,42 +15,60 @@ export default class FormValidator {
     }
 
     // скрыть ошибку валидации поля
-    const hideInputError = (inputElement) => {
+    _hideInputError(inputElement) {
       const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
       inputElement.classList.remove(this._settings.inputErrorClass);
       errorElement.classList.remove(this._settings.errorClass);
       errorElement.textContent = '';
     }
 
+  // МЕТОД - ПРОВЕРКА ВАЛИДНОСТИ ПОЛЯ
+
+  _checkInputValidity(inputElement) {
+
+    // // показать ошибку валидации поля
+    // const showInputError = (inputElement, errorMessage) => {
+    //   const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
+    //   inputElement.classList.add(this._settings.inputErrorClass);
+    //   errorElement.textContent = errorMessage;
+    //   errorElement.classList.add(this._settings.errorClass);
+    // }
+
+    // // скрыть ошибку валидации поля
+    // const hideInputError = (inputElement) => {
+    //   const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
+    //   inputElement.classList.remove(this._settings.inputErrorClass);
+    //   errorElement.classList.remove(this._settings.errorClass);
+    //   errorElement.textContent = '';
+    // }
+
     // проверить валидность поля и показать ошибку, если необходимо
     if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+      inputElement.setCustomValidity(inputElement.dataset.errorMessage);
     } else {
-    inputElement.setCustomValidity('');
+      inputElement.setCustomValidity('');
     }
 
     if (!inputElement.validity.valid) {
-      showInputError(inputElement, inputElement.validationMessage);
+      this._showInputError(inputElement, inputElement.validationMessage);
     } else {
-      hideInputError(inputElement);
+      this._hideInputError(inputElement);
     }
 
   } 
   
+  _hasInvalidInput () {
+    return this._inputList.some((inputItem) => {
+      return !inputItem.validity.valid;
+    });
+  }
 
   // МЕТОД - УПРАВЛЕНИЕ СОСТОЯНИЕМ КНОПКИ САБМИТА
 
   _toggleSubmitButtonState() {
-
-    const hasInvalidInput = () => {
-      return this._inputList.some((inputItem) => {
-        return !inputItem.validity.valid;
-      });
-    }
-    
-    if (hasInvalidInput) {
+    if (this._hasInvalidInput()) {
       this._submitButtonElement.disabled = true;
-      this._submitButtonElement.add(this._settings.inactiveButtonClass);
+      this._submitButtonElement.classList.add(this._settings.inactiveButtonClass); // fix .classList
     } else {
       this._submitButtonElement.disabled = false;
       this._submitButtonElement.classList.remove(this._settings.inactiveButtonClass);
@@ -67,12 +80,13 @@ export default class FormValidator {
   // МЕТОД - УСТАНОВКА ВСЕХ ОБРАБОТЧИКОВ
   
   _setEventListeners() {
-
-    this._toggleButtonState();
+    this._toggleSubmitButtonState(); // fix имя метода
     this._inputList.forEach((inputElement) => {
-      inputElement.addEventListener('input', function () {
-        inputElement._checkInputValidity(); // что тут ???
-        this._toggleButtonState();
+      // inputElement.addEventListener('input', function () {
+      //   inputElement._checkInputValidity(); // что тут ???
+      inputElement.addEventListener('input', () => {
+        this._checkInputValidity(inputElement); // что тут ???
+        this._toggleSubmitButtonState(); // fix имя метода
       });
     });
 
@@ -91,19 +105,22 @@ export default class FormValidator {
   }; 
   
   // нужно ли this._formElement.add... ???
-
+  
+  
+  // Функция сброса ошибок при открытии модальных окон
+  resetErrors() { 
+    //const inputList = Array.from(formElement.querySelectorAll(this._settings.inputSelector));
+    this._inputList.forEach(inputElement => {
+      this._hideInputError(inputElement)
+    });
+    this._toggleSubmitButtonState(); 
+  } 
 }
 
 
 
 
-// Функция сброса ошибок при открытии модальных окон
 
-export function resetError(formElement, settings) { 
-  const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
-  inputList.forEach(inputElement => hideInputError(formElement, inputElement, settings));
-  toggleButtonState(inputList, formElement.querySelector(settings.submitButtonSelector), settings); 
-} 
 
 
 // config - объект с селекторами и классами формы

@@ -148,8 +148,7 @@ avatarFormValidator.enableValidation();
 
 popupAuthorOpenBtn.addEventListener('click', () => {
   const userData = userInfo.getUserInfo();
-  nameInput.value = userData.name;
-  jobInput.value = userData.about;
+  popupEditAuthor.setInputValues({ authorName: userData.name, authorPosition: userData.about }); 
   popupEditAuthor.open();
   editFormValidator.resetErrors();
 });
@@ -168,19 +167,14 @@ popupAvatarOpenBtn.addEventListener('click', () => {
 // Добавление новой карточки  
 
 const popupAddCard = new PopupWithForm(popupCardSelector, (inputValues) => {
-  popupAddCard.renderLoading(true);
   cardToAdd.name = inputValues.cardName;
   cardToAdd.link = inputValues.imgLink;
-  api.postCustomCard(cardToAdd)
+  return api.postCustomCard(cardToAdd)
     .then((cardData) => {
       cardList.addItem(createCard(cardData));
-      popupAddCard.close();
     })
     .catch((err) => {
       console.log(err);
-    })
-    .finally(() => {
-      popupAddCard.renderLoading(false);
     })
 });
 
@@ -190,19 +184,14 @@ popupAddCard.setEventListeners();
 // Редактирование данных автора  
 
 const popupEditAuthor = new PopupWithForm(popupAuthorSelector, (inputValues) => {
-  popupEditAuthor.renderLoading(true);
   newUserData.name = inputValues.authorName;
   newUserData.about = inputValues.authorPosition;
-  api.editAuthorData(newUserData)
+  return api.editAuthorData(newUserData)
     .then((updatedData) => {
       userInfo.setUserInfo(updatedData);
-      popupEditAuthor.close()
     })
     .catch((err) => {
       console.log(err);
-    })
-    .finally(() => {
-      popupEditAuthor.renderLoading(false);
     })
 });
 
@@ -212,19 +201,13 @@ popupEditAuthor.setEventListeners();
 // Редактирование аватара автора
 
 const popupAvatar = new PopupWithForm(popupAvatarSelector, (inputValues) => {
-  popupAvatar.renderLoading(true);
-  api.editAuthorAvatar({ link: inputValues.avatarLink })
-      .then((updatedData) => {
-        userInfo.setUserInfo(updatedData);
-        popupAvatar.close();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        popupAvatar.renderLoading(false);
-      });
-  }
-);
+  return api.editAuthorAvatar({ link: inputValues.avatarLink })
+    .then((updatedData) => {
+      userInfo.setUserInfo(updatedData);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+});
 
 popupAvatar.setEventListeners();
